@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Alert, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { getTasks, createTask, toggleTaskFinished, deleteTask, moveTask, getLists } from '../../utils/dataManager';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { getTasks, createTask, toggleTaskFinished, deleteTask, moveTask, getLists, updateTask } from '../../utils/dataManager';
 import styles from './style';
 
 interface Task {
@@ -10,6 +11,7 @@ interface Task {
   description: string;
   isFinished: boolean;
   listId: number;
+  dueDate?: string | null;
 }
 
 interface List {
@@ -28,9 +30,13 @@ export default function TasksList() {
   const [availableLists, setAvailableLists] = useState<List[]>([]);
   const [newTaskName, setNewTaskName] = useState('');
   const [newTaskDescription, setNewTaskDescription] = useState('');
+  const [newTaskDueDate, setNewTaskDueDate] = useState<Date | null>(null);
+  const [showNewDatePicker, setShowNewDatePicker] = useState(false);
   const [editTaskName, setEditTaskName] = useState('');
   const [editTaskDescription, setEditTaskDescription] = useState('');
   const [editTaskListId, setEditTaskListId] = useState<number>(0);
+  const [editTaskDueDate, setEditTaskDueDate] = useState<Date | null>(null);
+  const [showEditDatePicker, setShowEditDatePicker] = useState(false);
 
   const loadTasks = () => {
     setTasks(getTasks(Number(listId)));
@@ -52,11 +58,12 @@ export default function TasksList() {
       return;
     }
 
-    createTask(newTaskName, newTaskDescription, Number(listId));
+    createTask(newTaskName, newTaskDescription, Number(listId), newTaskDueDate?.toISOString());
     loadTasks();
     setModalVisible(false);
     setNewTaskName('');
     setNewTaskDescription('');
+    setNewTaskDueDate(null);
   };
 
   const handleToggleTask = (taskId: number) => {
@@ -87,6 +94,7 @@ export default function TasksList() {
     setEditTaskName(task.name);
     setEditTaskDescription(task.description);
     setEditTaskListId(task.listId);
+    setEditTaskDueDate(task.dueDate ? new Date(task.dueDate) : null);
     setEditModalVisible(true);
   };
 
@@ -97,59 +105,67 @@ export default function TasksList() {
     }
 
     if (selectedTask) {
-      // Update task details
-      const taskIndex = getTasks(selectedTask.listId).findIndex(t => t.id === selectedTask.id);
-      if (taskIndex !== -1) {
-        selectedTask.name = editTaskName;
-        selectedTask.description = editTaskDescription;
-        
-        // Move task if list changed
-        if (editTaskListId !== selectedTask.listId) {
-          moveTask(selectedTask.id, editTaskListId);
-        }
-        
-        loadTasks();
-        setEditModalVisible(false);
-        setSelectedTask(null);
+      updateTask(selectedTask.id, editTaskName, editTaskDescription, editTaskDueDate?.toISOString());
+      
+      if (editTaskListId !== selectedTask.listId) {
+        moveTask(selectedTask.id, editTaskListId);
       }
+      
+      loadTasks();
+      setEditModalVisible(false);
+      setSelectedTask(null);
     }
   };
 
-  const renderTask = ({ item }: { item: Task }) => (
-    <View style={[styles.taskCard, item.isFinished && styles.taskCardFinished]}>
-      <TouchableOpacity 
-        style={styles.taskContent}
-        onPress={() => handleToggleTask(item.id)}
-        onLongPress={() => handleEditTask(item)}
-      >
-        <View style={styles.taskHeader}>
-          <Text style={[styles.taskName, item.isFinished && styles.taskNameFinished]}>
-            {item.name}
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  const renderTask = ({ item }: { item: Task }) => {
+    const overdue = item.dueDate && new Date(item.dueDate) < new Date() && !item.isFinished;
+    
+    return (
+      <View style={[styles.taskCard, item.isFinished && styles.taskCardFinished]}>
+        <TouchableOpacity 
+          style={styles.taskContent}
+          onPress={() => handleToggleTask(item.id)}
+        >
+          <View style={styles.taskHeader}>
+            <Text style={[styles.taskName, item.isFinished && styles.taskNameFinished]}>
+              {item.name}
+            </Text>
+            {item.isFinished && (
+              <Text style={styles.finishedBadge}>✓ Done</Text>
+            )}
+          </View>
+          <Text style={[styles.taskDescription, item.isFinished && styles.taskDescriptionFinished]}>
+            {item.description}
           </Text>
-          {item.isFinished && (
-            <Text style={styles.finishedBadge}>✓ Done</Text>
+          {item.dueDate && (
+            <Text style={[styles.dueDate, overdue && styles.overdue]}>
+              Due: {formatDate(item.dueDate)}
+            </Text>
           )}
+        </TouchableOpacity>
+        <View style={styles.taskButtons}>
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={() => handleEditTask(item)}
+          >
+            <Text style={styles.editButtonText}>✎</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.deleteButtonTask}
+            onPress={() => handleDeleteTask(item.id)}
+          >
+            <Text style={styles.deleteButtonText}>✕</Text>
+          </TouchableOpacity>
         </View>
-        <Text style={[styles.taskDescription, item.isFinished && styles.taskDescriptionFinished]}>
-          {item.description}
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.taskButtons}>
-        <TouchableOpacity 
-          style={styles.editButton}
-          onPress={() => handleEditTask(item)}
-        >
-          <Text style={styles.editButtonText}>✎</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.deleteButtonTask}
-          onPress={() => handleDeleteTask(item.id)}
-        >
-          <Text style={styles.deleteButtonText}>✕</Text>
-        </TouchableOpacity>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -178,41 +194,76 @@ export default function TasksList() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Create New Task</Text>
-            
-            <TextInput
-              style={styles.input}
-              placeholder="Task Name *"
-              placeholderTextColor="#999"
-              value={newTaskName}
-              onChangeText={setNewTaskName}
-            />
-            
-            <TextInput
-              style={[styles.input, styles.textArea]}
-              placeholder="Description (optional)"
-              placeholderTextColor="#999"
-              value={newTaskDescription}
-              onChangeText={setNewTaskDescription}
-              multiline
-              numberOfLines={4}
-            />
-
-            <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={styles.modalTitle}>Create New Task</Text>
               
+              <TextInput
+                style={styles.input}
+                placeholder="Task Name *"
+                placeholderTextColor="#999"
+                value={newTaskName}
+                onChangeText={setNewTaskName}
+              />
+              
+              <TextInput
+                style={[styles.input, styles.textArea]}
+                placeholder="Description (optional)"
+                placeholderTextColor="#999"
+                value={newTaskDescription}
+                onChangeText={setNewTaskDescription}
+                multiline
+                numberOfLines={4}
+              />
+
+              <Text style={styles.dateLabel}>Due Date (optional):</Text>
               <TouchableOpacity 
-                style={[styles.modalButton, styles.createButton]}
-                onPress={handleCreateTask}
+                style={styles.dateButton}
+                onPress={() => setShowNewDatePicker(true)}
               >
-                <Text style={styles.createButtonText}>Create</Text>
+                <Text style={styles.dateButtonText}>
+                  {newTaskDueDate ? formatDate(newTaskDueDate.toISOString()) : 'Select Date'}
+                </Text>
               </TouchableOpacity>
-            </View>
+
+              {showNewDatePicker && (
+                <DateTimePicker
+                  value={newTaskDueDate || new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    setShowNewDatePicker(false);
+                    if (selectedDate) {
+                      setNewTaskDueDate(selectedDate);
+                    }
+                  }}
+                />
+              )}
+
+              {newTaskDueDate && (
+                <TouchableOpacity 
+                  style={styles.clearDateButton}
+                  onPress={() => setNewTaskDueDate(null)}
+                >
+                  <Text style={styles.clearDateText}>Clear Date</Text>
+                </TouchableOpacity>
+              )}
+
+              <View style={styles.modalButtons}>
+                <TouchableOpacity 
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  style={[styles.modalButton, styles.createButton]}
+                  onPress={handleCreateTask}
+                >
+                  <Text style={styles.createButtonText}>Create</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -225,8 +276,8 @@ export default function TasksList() {
         onRequestClose={() => setEditModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <View style={styles.modalContent}>
+          <View style={styles.modalContent}>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={styles.modalTitle}>Edit Task</Text>
               
               <TextInput
@@ -246,6 +297,39 @@ export default function TasksList() {
                 multiline
                 numberOfLines={4}
               />
+
+              <Text style={styles.dateLabel}>Due Date (optional):</Text>
+              <TouchableOpacity 
+                style={styles.dateButton}
+                onPress={() => setShowEditDatePicker(true)}
+              >
+                <Text style={styles.dateButtonText}>
+                  {editTaskDueDate ? formatDate(editTaskDueDate.toISOString()) : 'Select Date'}
+                </Text>
+              </TouchableOpacity>
+
+              {showEditDatePicker && (
+                <DateTimePicker
+                  value={editTaskDueDate || new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    setShowEditDatePicker(false);
+                    if (selectedDate) {
+                      setEditTaskDueDate(selectedDate);
+                    }
+                  }}
+                />
+              )}
+
+              {editTaskDueDate && (
+                <TouchableOpacity 
+                  style={styles.clearDateButton}
+                  onPress={() => setEditTaskDueDate(null)}
+                >
+                  <Text style={styles.clearDateText}>Clear Date</Text>
+                </TouchableOpacity>
+              )}
 
               <Text style={styles.listLabel}>Move to List:</Text>
               {availableLists.map((list) => (
@@ -280,8 +364,8 @@ export default function TasksList() {
                   <Text style={styles.createButtonText}>Save</Text>
                 </TouchableOpacity>
               </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         </View>
       </Modal>
     </View>

@@ -129,8 +129,12 @@ export default function Board() {
     </View>
   );
 
-  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2'];
-
+  const colors = [
+    '#ffffff', '#00ff00', '#dddddd', '#cccccc', 
+    '#555555', '#ff0000', '#0000ff', '#ff00ff',
+    '#4ECDC4', '#45B7D1', '#FFA07A', 
+    '#98D8C8', '#F7DC6F', '#BB8FCE'
+  ];
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>

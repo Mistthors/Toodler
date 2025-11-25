@@ -87,6 +87,16 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
     color: '#999',
   },
+  dueDate: {
+    fontSize: 12,
+    color: '#007AFF',
+    marginTop: 4,
+    fontWeight: '600',
+  },
+  overdue: {
+    color: '#FF3B30',
+    fontWeight: 'bold',
+  },
   editButton: {
     padding: 8,
     marginRight: 8,
@@ -110,6 +120,35 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 12,
     color: '#333',
+  },
+  dateLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 8,
+    marginBottom: 8,
+    color: '#333',
+  },
+  dateButton: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    backgroundColor: '#f9f9f9',
+  },
+  dateButtonText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  clearDateButton: {
+    padding: 8,
+    marginBottom: 12,
+    alignItems: 'center',
+  },
+  clearDateText: {
+    color: '#FF3B30',
+    fontSize: 14,
+    fontWeight: '600',
   },
   listOption: {
     backgroundColor: 'white',
@@ -136,11 +175,6 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontWeight: 'bold',
   },
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -151,8 +185,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 12,
     padding: 20,
-    width: '100%',
-    maxWidth: 400,
+    width: '90%',
+    maxWidth: 500,
+    maxHeight: '80%',
   },
   modalTitle: {
     fontSize: 24,
