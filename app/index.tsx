@@ -16,12 +16,14 @@ export default function HomeScreen() {
         options={{
           title: 'Toodler',
           headerStyle: {
-            backgroundColor: '#007AFF',
+            backgroundColor: '#8995ffff'
           },
+
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
-            fontSize: 24,
+            fontSize: 35,
+            fontFamily: 'Avenir Next',
           },
           headerTitleAlign: 'center',
           headerBackVisible: false,

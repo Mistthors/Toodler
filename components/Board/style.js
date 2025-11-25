@@ -1,35 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { commonStyles } from '../styles/commonStyles';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-    paddingTop: 50,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  header: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    flex: 1,
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  addButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
+  ...commonStyles,
+  
+  // List-specific styles
   listCard: {
     backgroundColor: 'white',
     padding: 16,
@@ -61,60 +36,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  editButton: {
-    padding: 8,
-    marginRight: 8,
-  },
   editButtonTextList: {
     fontSize: 24,
     color: '#007AFF',
     fontWeight: 'bold',
   },
-  deleteButton: {
-    padding: 8,
-  },
-  deleteButtonText: {
-    fontSize: 24,
-    color: '#FF3B30',
-    fontWeight: 'bold',
-  },
   deleteBoardButton: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: '#f06861ff',
     padding: 16,
-    margin: 16,
+    margin: 50,
     borderRadius: 8,
     alignItems: 'center',
+
   },
   deleteBoardButtonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 20,
-    width: '90%',
-    maxWidth: 400,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
     fontSize: 16,
   },
   colorLabel: {
@@ -140,33 +77,6 @@ const styles = StyleSheet.create({
   selectedColor: {
     borderColor: '#000',
     borderWidth: 3,
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
-  modalButton: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    marginHorizontal: 4,
-  },
-  cancelButton: {
-    backgroundColor: '#f0f0f0',
-  },
-  createButton: {
-    backgroundColor: '#007AFF',
-  },
-  cancelButtonText: {
-    color: '#333',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  createButtonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
   },
 });
 
