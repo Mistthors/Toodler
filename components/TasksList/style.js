@@ -1,35 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { commonStyles } from '../styles/commonStyles';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-    paddingTop: 50,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  header: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    flex: 1,
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  addButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
+  ...commonStyles,
+  
+  // Task-specific styles
   taskCard: {
     backgroundColor: 'white',
     padding: 16,
@@ -109,22 +84,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#666',
   },
-  editButton: {
-    padding: 8,
-    marginRight: 8,
-  },
-  editButtonText: {
-    fontSize: 24,
-    color: '#007AFF',
-    fontWeight: 'bold',
-  },
   deleteButtonTask: {
     padding: 8,
-  },
-  deleteButtonText: {
-    fontSize: 24,
-    color: '#FF3B30',
-    fontWeight: 'bold',
   },
   listLabel: {
     fontSize: 16,
@@ -187,64 +148,9 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontWeight: 'bold',
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 20,
-    width: '90%',
-    maxWidth: 500,
-    maxHeight: '80%',
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    fontSize: 16,
-  },
   textArea: {
     height: 100,
     textAlignVertical: 'top',
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  modalButton: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    marginHorizontal: 4,
-  },
-  cancelButton: {
-    backgroundColor: '#f0f0f0',
-  },
-  createButton: {
-    backgroundColor: '#007AFF',
-  },
-  cancelButtonText: {
-    color: '#333',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  createButtonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
   },
 });
 

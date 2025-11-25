@@ -16,7 +16,7 @@ export default function TasksScreen() {
         options={{
           headerBackTitle: 'Back',
           headerStyle: {
-            backgroundColor: '#007AFF',
+            backgroundColor: '#8995ffff',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
