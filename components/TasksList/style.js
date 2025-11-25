@@ -152,6 +152,51 @@ const styles = StyleSheet.create({
     height: 100,
     textAlignVertical: 'top',
   },
+  badges: {
+  flexDirection: 'row',
+  gap: 8,
+},
+priorityBadge: {
+  color: 'white',
+  paddingHorizontal: 8,
+  paddingVertical: 4,
+  borderRadius: 4,
+  fontSize: 12,
+  fontWeight: 'bold',
+},
+priorityLabel: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  marginTop: 8,
+  marginBottom: 8,
+  color: '#333',
+},
+priorityButtons: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: 12,
+  gap: 8,
+},
+priorityButton: {
+  flex: 1,
+  padding: 12,
+  borderRadius: 8,
+  borderWidth: 2,
+  alignItems: 'center',
+  backgroundColor: 'white',
+},
+priorityButtonSelected: {
+  backgroundColor: '#E3F2FD',
+},
+priorityButtonText: {
+  fontSize: 14,
+  color: '#666',
+  fontWeight: '600',
+},
+priorityButtonTextSelected: {
+  color: '#007AFF',
+  fontWeight: 'bold',
+},
 });
 
 export default styles;
