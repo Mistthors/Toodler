@@ -97,6 +97,18 @@ const styles = StyleSheet.create({
     color: '#FF3B30',
     fontWeight: 'bold',
   },
+  doneSectionHeader: {
+    marginTop: 24,
+    marginBottom: 12,
+    paddingBottom: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: '#ddd',
+  },
+  doneSectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#666',
+  },
   editButton: {
     padding: 8,
     marginRight: 8,

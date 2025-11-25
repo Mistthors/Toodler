@@ -136,6 +136,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
+  characterCount: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'right',
+    marginTop: -8,
+    marginBottom: 8,
+  },
 });
 
 export default styles;

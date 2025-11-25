@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Alert, ScrollView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { getTasks, createTask, toggleTaskFinished, deleteTask, moveTask, getLists, updateTask } from '../../utils/dataManager';
@@ -167,6 +167,9 @@ export default function TasksList() {
     );
   };
 
+  const unfinishedTasks = tasks.filter(task => !task.isFinished);
+  const finishedTasks = tasks.filter(task => task.isFinished);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -179,11 +182,28 @@ export default function TasksList() {
         </TouchableOpacity>
       </View>
 
-      <FlatList
-        data={tasks}
-        renderItem={renderTask}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      <ScrollView>
+        {/* Unfinished Tasks */}
+        {unfinishedTasks.map(task => (
+          <View key={task.id}>
+            {renderTask({ item: task })}
+          </View>
+        ))}
+        
+        {/* Done Section */}
+        {finishedTasks.length > 0 && (
+          <>
+            <View style={styles.doneSectionHeader}>
+              <Text style={styles.doneSectionTitle}>Done ({finishedTasks.length})</Text>
+            </View>
+            {finishedTasks.map(task => (
+              <View key={task.id}>
+                {renderTask({ item: task })}
+              </View>
+            ))}
+          </>
+        )}
+      </ScrollView>
 
       {/* Create Task Modal */}
       <Modal
