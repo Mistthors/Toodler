@@ -1,7 +1,8 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, TextInput, TouchableOpacity, View, Modal, Alert } from 'react-native';
+import { FlatList, Image, Text, TextInput, TouchableOpacity, View, Modal, Alert, Button } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import { getBoards, createBoard, deleteBoard, updateBoard } from '../../utils/dataManager';
 import styles from './style';
 
@@ -23,6 +24,8 @@ export default function BoardsList() {
   const [editBoardName, setEditBoardName] = useState('');
   const [editBoardDescription, setEditBoardDescription] = useState('');
   const [editBoardPhoto, setEditBoardPhoto] = useState('');
+  const [newBoardPhotoPreview, setNewBoardPhotoPreview] = useState<string | null>(null);
+  const [editBoardPhotoPreview, setEditBoardPhotoPreview] = useState<string | null>(null);
   const router = useRouter();
 
   const loadBoards = () => {
@@ -34,6 +37,44 @@ export default function BoardsList() {
       loadBoards();
     }, [])
   );
+
+  async function handlePickImageCreate() {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission required', 'Allow access to photos to pick an image.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      setNewBoardPhoto(result.assets[0].uri);
+      setNewBoardPhotoPreview(result.assets[0].uri);
+    }
+  }
+
+  async function handlePickImageEdit() {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission required', 'Allow access to photos to pick an image.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      setEditBoardPhoto(result.assets[0].uri);
+      setEditBoardPhotoPreview(result.assets[0].uri);
+    }
+  }
 
   const handleCreateBoard = () => {
     if (!newBoardName.trim()) {
@@ -47,6 +88,7 @@ export default function BoardsList() {
     setNewBoardName('');
     setNewBoardDescription('');
     setNewBoardPhoto('');
+    setNewBoardPhotoPreview(null);
   };
 
   const handleEditBoard = (board: Board) => {
@@ -54,26 +96,26 @@ export default function BoardsList() {
     setEditBoardName(board.name);
     setEditBoardDescription(board.description);
     setEditBoardPhoto(board.thumbnailPhoto);
+    setEditBoardPhotoPreview(board.thumbnailPhoto);
     setEditModalVisible(true);
   };
 
   const handleSaveEdit = () => {
-  if (!editBoardName.trim()) {
-    Alert.alert('Error', 'Board name is required');
-    return;
-  }
+    if (!editBoardName.trim()) {
+      Alert.alert('Error', 'Board name is required');
+      return;
+    }
 
-  if (selectedBoard) {
-    updateBoard(selectedBoard.id, editBoardName, editBoardDescription, editBoardPhoto);
-    setEditModalVisible(false);
-    setSelectedBoard(null);
-    // Force reload by setting boards to empty then loading
-    setBoards([]);
-    setTimeout(() => {
-      loadBoards();
-    }, 10);
-  }
- };
+    if (selectedBoard) {
+      updateBoard(selectedBoard.id, editBoardName, editBoardDescription, editBoardPhoto);
+      setEditModalVisible(false);
+      setSelectedBoard(null);
+      setBoards([]);
+      setTimeout(() => {
+        loadBoards();
+      }, 10);
+    }
+  };
 
   const renderBoard = ({ item }: { item: Board }) => (
     <View style={styles.boardCard}>
@@ -145,9 +187,17 @@ export default function BoardsList() {
               multiline
             />
             
+            <View style={{ marginBottom: 12 }}>
+              <Text style={{ marginBottom: 8, fontWeight: '600' }}>Thumbnail Image:</Text>
+              {newBoardPhotoPreview ? (
+                <Image source={{ uri: newBoardPhotoPreview }} style={{ width: '100%', height: 120, borderRadius: 8, marginBottom: 8 }} />
+              ) : null}
+              <Button title="Pick Image from Device" onPress={handlePickImageCreate} />
+            </View>
+
             <TextInput
               style={styles.input}
-              placeholder="Image URL (optional)"
+              placeholder="Or paste Image URL"
               placeholderTextColor="#999"
               value={newBoardPhoto}
               onChangeText={setNewBoardPhoto}
@@ -200,9 +250,17 @@ export default function BoardsList() {
               multiline
             />
             
+            <View style={{ marginBottom: 12 }}>
+              <Text style={{ marginBottom: 8, fontWeight: '600' }}>Thumbnail Image:</Text>
+              {editBoardPhotoPreview ? (
+                <Image source={{ uri: editBoardPhotoPreview }} style={{ width: '100%', height: 120, borderRadius: 8, marginBottom: 8 }} />
+              ) : null}
+              <Button title="Pick Image from Device" onPress={handlePickImageEdit} />
+            </View>
+
             <TextInput
               style={styles.input}
-              placeholder="Image URL (optional)"
+              placeholder="Or paste Image URL"
               placeholderTextColor="#999"
               value={editBoardPhoto}
               onChangeText={setEditBoardPhoto}
