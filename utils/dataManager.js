@@ -81,25 +81,27 @@ export const getTasks = (listId) => {
   return appData.tasks.filter(task => task.listId === listId);
 };
 
-export const createTask = (name, description, listId, dueDate) => {
+export const createTask = (name, description, listId, dueDate, priority) => {
   const newTask = {
     id: getNextId(appData.tasks),
     name,
     description: description || '',
     isFinished: false,
     listId,
-    dueDate: dueDate || null
+    dueDate: dueDate || null,
+    priority: priority || 'None'
   };
   appData.tasks.push(newTask);
   return newTask;
 };
 
-export const updateTask = (taskId, name, description, dueDate) => {
+export const updateTask = (taskId, name, description, dueDate, priority) => {
   const task = appData.tasks.find(t => t.id === taskId);
   if (task) {
     task.name = name;
     task.description = description;
     task.dueDate = dueDate;
+    task.priority = priority;
   }
   return task;
 };

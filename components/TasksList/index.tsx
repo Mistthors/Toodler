@@ -12,6 +12,7 @@ interface Task {
   isFinished: boolean;
   listId: number;
   dueDate?: string | null;
+  priority?: string;
 }
 
 interface List {
@@ -32,11 +33,13 @@ export default function TasksList() {
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskDueDate, setNewTaskDueDate] = useState<Date | null>(null);
   const [showNewDatePicker, setShowNewDatePicker] = useState(false);
+  const [newTaskPriority, setNewTaskPriority] = useState('None');
   const [editTaskName, setEditTaskName] = useState('');
   const [editTaskDescription, setEditTaskDescription] = useState('');
   const [editTaskListId, setEditTaskListId] = useState<number>(0);
   const [editTaskDueDate, setEditTaskDueDate] = useState<Date | null>(null);
   const [showEditDatePicker, setShowEditDatePicker] = useState(false);
+  const [editTaskPriority, setEditTaskPriority] = useState('None');
 
   const loadTasks = () => {
     setTasks(getTasks(Number(listId)));
@@ -58,12 +61,13 @@ export default function TasksList() {
       return;
     }
 
-    createTask(newTaskName, newTaskDescription, Number(listId), newTaskDueDate?.toISOString());
+    createTask(newTaskName, newTaskDescription, Number(listId), newTaskDueDate?.toISOString(), newTaskPriority);
     loadTasks();
     setModalVisible(false);
     setNewTaskName('');
     setNewTaskDescription('');
     setNewTaskDueDate(null);
+    setNewTaskPriority('None');
   };
 
   const handleToggleTask = (taskId: number) => {
@@ -95,6 +99,7 @@ export default function TasksList() {
     setEditTaskDescription(task.description);
     setEditTaskListId(task.listId);
     setEditTaskDueDate(task.dueDate ? new Date(task.dueDate) : null);
+    setEditTaskPriority(task.priority || 'None');
     setEditModalVisible(true);
   };
 
@@ -105,7 +110,7 @@ export default function TasksList() {
     }
 
     if (selectedTask) {
-      updateTask(selectedTask.id, editTaskName, editTaskDescription, editTaskDueDate?.toISOString());
+      updateTask(selectedTask.id, editTaskName, editTaskDescription, editTaskDueDate?.toISOString(), editTaskPriority);
       
       if (editTaskListId !== selectedTask.listId) {
         moveTask(selectedTask.id, editTaskListId);
@@ -123,6 +128,15 @@ export default function TasksList() {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
+  const getPriorityColor = (priority: string) => {
+    switch(priority) {
+      case 'High': return '#FF3B30';
+      case 'Medium': return '#FF9500';
+      case 'Low': return '#34C759';
+      default: return '#999';
+    }
+  };
+
   const renderTask = ({ item }: { item: Task }) => {
     const overdue = item.dueDate && new Date(item.dueDate) < new Date() && !item.isFinished;
     
@@ -136,9 +150,16 @@ export default function TasksList() {
             <Text style={[styles.taskName, item.isFinished && styles.taskNameFinished]}>
               {item.name}
             </Text>
-            {item.isFinished && (
-              <Text style={styles.finishedBadge}>✓ Done</Text>
-            )}
+            <View style={styles.badges}>
+              {item.priority && item.priority !== 'None' && (
+                <Text style={[styles.priorityBadge, { backgroundColor: getPriorityColor(item.priority) }]}>
+                  {item.priority}
+                </Text>
+              )}
+              {item.isFinished && (
+                <Text style={styles.finishedBadge}>✓ Done</Text>
+              )}
+            </View>
           </View>
           <Text style={[styles.taskDescription, item.isFinished && styles.taskDescriptionFinished]}>
             {item.description}
@@ -268,6 +289,28 @@ export default function TasksList() {
                 </TouchableOpacity>
               )}
 
+              <Text style={styles.priorityLabel}>Priority:</Text>
+              <View style={styles.priorityButtons}>
+                {['High', 'Medium', 'Low', 'None'].map((priority) => (
+                  <TouchableOpacity
+                    key={priority}
+                    style={[
+                      styles.priorityButton,
+                      newTaskPriority === priority && styles.priorityButtonSelected,
+                      { borderColor: priority === 'High' ? '#FF3B30' : priority === 'Medium' ? '#FF9500' : priority === 'Low' ? '#34C759' : '#999' }
+                    ]}
+                    onPress={() => setNewTaskPriority(priority)}
+                  >
+                    <Text style={[
+                      styles.priorityButtonText,
+                      newTaskPriority === priority && styles.priorityButtonTextSelected
+                    ]}>
+                      {priority}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
               <View style={styles.modalButtons}>
                 <TouchableOpacity 
                   style={[styles.modalButton, styles.cancelButton]}
@@ -350,6 +393,28 @@ export default function TasksList() {
                   <Text style={styles.clearDateText}>Clear Date</Text>
                 </TouchableOpacity>
               )}
+
+              <Text style={styles.priorityLabel}>Priority:</Text>
+              <View style={styles.priorityButtons}>
+                {['High', 'Medium', 'Low', 'None'].map((priority) => (
+                  <TouchableOpacity
+                    key={priority}
+                    style={[
+                      styles.priorityButton,
+                      editTaskPriority === priority && styles.priorityButtonSelected,
+                      { borderColor: priority === 'High' ? '#FF3B30' : priority === 'Medium' ? '#FF9500' : priority === 'Low' ? '#34C759' : '#999' }
+                    ]}
+                    onPress={() => setEditTaskPriority(priority)}
+                  >
+                    <Text style={[
+                      styles.priorityButtonText,
+                      editTaskPriority === priority && styles.priorityButtonTextSelected
+                    ]}>
+                      {priority}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
 
               <Text style={styles.listLabel}>Move to List:</Text>
               {availableLists.map((list) => (
