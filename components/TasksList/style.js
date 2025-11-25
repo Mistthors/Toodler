@@ -189,7 +189,7 @@ priorityButtonSelected: {
   backgroundColor: '#E3F2FD',
 },
 priorityButtonText: {
-  fontSize: 14,
+  fontSize: 10,
   color: '#666',
   fontWeight: '600',
 },
