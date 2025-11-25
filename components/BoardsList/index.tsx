@@ -41,6 +41,16 @@ export default function BoardsList() {
       return;
     }
 
+    if (newBoardName.length > 50) {
+      Alert.alert('Error', 'Board name must be 50 characters or less');
+      return;
+    }
+
+    if (newBoardDescription.length > 200) {
+      Alert.alert('Error', 'Board description must be 200 characters or less');
+      return;
+    }
+
     createBoard(newBoardName, newBoardDescription, newBoardPhoto);
     loadBoards();
     setModalVisible(false);
@@ -60,6 +70,16 @@ export default function BoardsList() {
   const handleSaveEdit = () => {
   if (!editBoardName.trim()) {
     Alert.alert('Error', 'Board name is required');
+    return;
+  }
+  
+  if (editBoardName.length > 50) {
+    Alert.alert('Error', 'Board name must be 50 characters or less');
+    return;
+  }
+
+  if (editBoardDescription.length > 200) {
+    Alert.alert('Error', 'Board description must be 200 characters or less');
     return;
   }
 
@@ -134,7 +154,9 @@ export default function BoardsList() {
               placeholderTextColor="#999"
               value={newBoardName}
               onChangeText={setNewBoardName}
+              maxLength={50}
             />
+            <Text style={styles.characterCount}>{newBoardName.length}/50</Text>
             
             <TextInput
               style={styles.input}
@@ -143,7 +165,9 @@ export default function BoardsList() {
               value={newBoardDescription}
               onChangeText={setNewBoardDescription}
               multiline
+              maxLength={200}
             />
+            <Text style={styles.characterCount}>{newBoardDescription.length}/200</Text>
             
             <TextInput
               style={styles.input}
@@ -189,7 +213,9 @@ export default function BoardsList() {
               placeholderTextColor="#999"
               value={editBoardName}
               onChangeText={setEditBoardName}
+              maxLength={50}
             />
+            <Text style={styles.characterCount}>{editBoardName.length}/50</Text>
             
             <TextInput
               style={styles.input}
@@ -198,7 +224,9 @@ export default function BoardsList() {
               value={editBoardDescription}
               onChangeText={setEditBoardDescription}
               multiline
+              maxLength={200}
             />
+            <Text style={styles.characterCount}>{editBoardDescription.length}/200</Text>
             
             <TextInput
               style={styles.input}
