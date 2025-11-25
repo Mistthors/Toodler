@@ -81,23 +81,25 @@ export const getTasks = (listId) => {
   return appData.tasks.filter(task => task.listId === listId);
 };
 
-export const createTask = (name, description, listId) => {
+export const createTask = (name, description, listId, dueDate) => {
   const newTask = {
     id: getNextId(appData.tasks),
     name,
     description: description || '',
     isFinished: false,
-    listId
+    listId,
+    dueDate: dueDate || null
   };
   appData.tasks.push(newTask);
   return newTask;
 };
 
-export const updateTask = (taskId, name, description) => {
+export const updateTask = (taskId, name, description, dueDate) => {
   const task = appData.tasks.find(t => t.id === taskId);
   if (task) {
     task.name = name;
     task.description = description;
+    task.dueDate = dueDate;
   }
   return task;
 };
