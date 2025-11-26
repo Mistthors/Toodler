@@ -34,13 +34,13 @@ export default function Board() {
     }, [boardId])
   );
 
-  const handleCreateList = () => {
+  const handleCreateList = async () => {
     if (!newListName.trim()) {
       Alert.alert('Error', 'List name is required');
       return;
     }
 
-    createList(newListName, newListColor, Number(boardId));
+    await createList(newListName, newListColor, Number(boardId));
     loadLists();
     setModalVisible(false);
     setNewListName('');
@@ -56,8 +56,8 @@ export default function Board() {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
-            deleteList(listId);
+          onPress: async () => {
+            await deleteList(listId);
             loadLists();
           }
         }
@@ -74,8 +74,8 @@ export default function Board() {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
-            deleteBoard(Number(boardId));
+          onPress: async () => {
+            await deleteBoard(Number(boardId));
             router.back();
           }
         }
@@ -90,14 +90,14 @@ export default function Board() {
     setEditModalVisible(true);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editListName.trim()) {
       Alert.alert('Error', 'List name is required');
       return;
     }
 
     if (selectedList) {
-      updateList(selectedList.id, editListName, editListColor);
+      await updateList(selectedList.id, editListName, editListColor);
       loadLists();
       setEditModalVisible(false);
       setSelectedList(null);
@@ -105,36 +105,36 @@ export default function Board() {
   };
 
   const renderList = ({ item }: { item: List }) => {
-  const taskCount = getTasks(item.id).length; // Calculate task count dynamically
-  
-  return (
-    <View style={[styles.listCard, { borderLeftColor: item.color, borderLeftWidth: 5 }]}>
-      <TouchableOpacity 
-        style={styles.listContent}
-        onPress={() => router.push(`/tasks?listId=${item.id}&listName=${item.name}&boardId=${boardId}`)}
-      >
-        <Text style={styles.listName}>{item.name}</Text>
-        <Text style={styles.taskCount}>
-          {taskCount} tasks
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.listButtons}>
+    const taskCount = getTasks(item.id).length;
+    
+    return (
+      <View style={[styles.listCard, { borderLeftColor: item.color, borderLeftWidth: 5 }]}>
         <TouchableOpacity 
-          style={styles.editButton}
-          onPress={() => handleEditList(item)}
+          style={styles.listContent}
+          onPress={() => router.push(`/tasks?listId=${item.id}&listName=${item.name}&boardId=${boardId}`)}
         >
-          <Text style={styles.editButtonTextList}>✎</Text>
+          <Text style={styles.listName}>{item.name}</Text>
+          <Text style={styles.taskCount}>
+            {taskCount} tasks
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.deleteButton}
-          onPress={() => handleDeleteList(item.id)}
-        >
-          <Text style={styles.deleteButtonText}>✕</Text>
-        </TouchableOpacity>
+        <View style={styles.listButtons}>
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={() => handleEditList(item)}
+          >
+            <Text style={styles.editButtonTextList}>✎</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.deleteButton}
+            onPress={() => handleDeleteList(item.id)}
+          >
+            <Text style={styles.deleteButtonText}>✕</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  };
 
   const colors = [
     '#ffffff', '#00ff00', '#dddddd', '#cccccc', 
@@ -142,6 +142,7 @@ export default function Board() {
     '#4ECDC4', '#45B7D1', '#FFA07A', 
     '#98D8C8', '#F7DC6F', '#BB8FCE'
   ];
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -179,10 +180,8 @@ export default function Board() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
         >
-          {/* tap OUTSIDE => close */}
           <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
             <View style={styles.modalOverlay}>
-              {/* tap INSIDE => keep open */}
               <TouchableWithoutFeedback onPress={() => {}}>
                 <View style={styles.modalContent}>
                   <ScrollView
@@ -237,7 +236,6 @@ export default function Board() {
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </Modal>
-
 
       {/* Edit List Modal */}
       <Modal

@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Text, TextInput, TouchableOpacity, View, Modal, Alert, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { getBoards, createBoard, deleteBoard, updateBoard } from '../../utils/dataManager';
+import { getBoards, createBoard, deleteBoard, updateBoard, loadDataFromStorage } from '../../utils/dataManager';
 import styles from './style';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -30,13 +30,24 @@ export default function BoardsList() {
     setBoards(getBoards());
   };
 
+  // Load data from storage on mount
+  useEffect(() => {
+    const initializeData = async () => {
+      await loadDataFromStorage();
+      loadBoards();
+    };
+    
+    initializeData();
+  }, []);
+
+  // Reload boards when screen is focused
   useFocusEffect(
     React.useCallback(() => {
       loadBoards();
     }, [])
   );
 
-  const handleCreateBoard = () => {
+  const handleCreateBoard = async () => {
     if (!newBoardName.trim()) {
       Alert.alert('Error', 'Board name is required');
       return;
@@ -52,7 +63,7 @@ export default function BoardsList() {
       return;
     }
 
-    createBoard(newBoardName, newBoardDescription, newBoardPhoto);
+    await createBoard(newBoardName, newBoardDescription, newBoardPhoto);
     loadBoards();
     setModalVisible(false);
     setNewBoardName('');
@@ -68,34 +79,34 @@ export default function BoardsList() {
     setEditModalVisible(true);
   };
 
-  const handleSaveEdit = () => {
-  if (!editBoardName.trim()) {
-    Alert.alert('Error', 'Board name is required');
-    return;
-  }
-  
-  if (editBoardName.length > 50) {
-    Alert.alert('Error', 'Board name must be 50 characters or less');
-    return;
-  }
+  const handleSaveEdit = async () => {
+    if (!editBoardName.trim()) {
+      Alert.alert('Error', 'Board name is required');
+      return;
+    }
+    
+    if (editBoardName.length > 50) {
+      Alert.alert('Error', 'Board name must be 50 characters or less');
+      return;
+    }
 
-  if (editBoardDescription.length > 200) {
-    Alert.alert('Error', 'Board description must be 200 characters or less');
-    return;
-  }
+    if (editBoardDescription.length > 200) {
+      Alert.alert('Error', 'Board description must be 200 characters or less');
+      return;
+    }
 
-  if (selectedBoard) {
-    updateBoard(selectedBoard.id, editBoardName, editBoardDescription, editBoardPhoto);
-    setEditModalVisible(false);
-    setSelectedBoard(null);
-    // Force reload by setting boards to empty then loading
-    setBoards([]);
-    setTimeout(() => {
-      loadBoards();
-    }, 10);
-  }
- };
- const pickImage = async (mode: 'create' | 'edit') => {
+    if (selectedBoard) {
+      await updateBoard(selectedBoard.id, editBoardName, editBoardDescription, editBoardPhoto);
+      setEditModalVisible(false);
+      setSelectedBoard(null);
+      setBoards([]);
+      setTimeout(() => {
+        loadBoards();
+      }, 10);
+    }
+  };
+
+  const pickImage = async (mode: 'create' | 'edit') => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
@@ -244,7 +255,6 @@ export default function BoardsList() {
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </Modal>
-
 
       {/* Edit Board Modal */}
       <Modal
