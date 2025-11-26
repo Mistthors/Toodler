@@ -64,12 +64,12 @@ Before running this project, make sure you have the following installed:
 
 ### Extra Features
 - **Persistent Storage (AsyncStorage)**
-- All data automatically saved to device storage
-- Data survives app restarts and closes
-- Automatic save on every create, update, and delete operation
-- Initial data loaded from `data.json` on first launch
-- All subsequent data changes stored persistently
-- Uses React Native AsyncStorage for local data persistence
+   - All data automatically saved to device storage
+   - Data survives app restarts and closes
+   - Automatic save on every create, update, and delete operation
+   - Initial data loaded from `data.json` on first launch
+   - All subsequent data changes stored persistently
+   - Uses React Native AsyncStorage for local data persistence
   
 - **Due Dates**
   - Optional due date selection with native date picker
