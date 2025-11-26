@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Alert, Toucha
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { getLists, createList, deleteList, deleteBoard, getTasks, updateList } from '../../utils/dataManager';
 import styles from './style';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface List {
   id: number;
@@ -27,9 +28,11 @@ export default function Board() {
     setLists(getLists(Number(boardId)));
   };
 
-  useEffect(() => {
-    loadLists();
-  }, [boardId]);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadLists();
+    }, [boardId])
+  );
 
   const handleCreateList = () => {
     if (!newListName.trim()) {
@@ -101,7 +104,10 @@ export default function Board() {
     }
   };
 
-  const renderList = ({ item }: { item: List }) => (
+  const renderList = ({ item }: { item: List }) => {
+  const taskCount = getTasks(item.id).length; // Calculate task count dynamically
+  
+  return (
     <View style={[styles.listCard, { borderLeftColor: item.color, borderLeftWidth: 5 }]}>
       <TouchableOpacity 
         style={styles.listContent}
@@ -109,7 +115,7 @@ export default function Board() {
       >
         <Text style={styles.listName}>{item.name}</Text>
         <Text style={styles.taskCount}>
-          {getTasks(item.id).length} tasks
+          {taskCount} tasks
         </Text>
       </TouchableOpacity>
       <View style={styles.listButtons}>
@@ -128,6 +134,7 @@ export default function Board() {
       </View>
     </View>
   );
+};
 
   const colors = [
     '#ffffff', '#00ff00', '#dddddd', '#cccccc', 
