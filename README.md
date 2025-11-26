@@ -28,6 +28,7 @@ Before running this project, make sure you have the following installed:
 ```bash
    npm install @react-native-community/datetimepicker
    npx expo install expo-image-picker
+   npm install @react-native-async-storage/async-storage
 ```
 
 4. **Start the development server**
