@@ -1,10 +1,3 @@
-// import React from 'react';
-// import TasksList from '../components/TasksList';
-
-// export default function TasksScreen() {
-//   return <TasksList />;
-// }
-
 import React from 'react';
 import { Stack } from 'expo-router';
 import TasksList from '../components/TasksList';

@@ -57,13 +57,13 @@ export default function TasksList() {
     loadAvailableLists();
   }, [listId, boardId]);
 
-  const handleCreateTask = () => {
+  const handleCreateTask = async () => {
     if (!newTaskName.trim()) {
       Alert.alert('Error', 'Task name is required');
       return;
     }
 
-    createTask(newTaskName, newTaskDescription, Number(listId), newTaskDueDate?.toISOString(), newTaskPriority);
+    await createTask(newTaskName, newTaskDescription, Number(listId), newTaskDueDate?.toISOString(), newTaskPriority);
     loadTasks();
     setModalVisible(false);
     setNewTaskName('');
@@ -72,8 +72,8 @@ export default function TasksList() {
     setNewTaskPriority('None');
   };
 
-  const handleToggleTask = (taskId: number) => {
-    toggleTaskFinished(taskId);
+  const handleToggleTask = async (taskId: number) => {
+    await toggleTaskFinished(taskId);
     loadTasks();
   };
 
@@ -86,8 +86,8 @@ export default function TasksList() {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
-            deleteTask(taskId);
+          onPress: async () => {
+            await deleteTask(taskId);
             loadTasks();
           }
         }
@@ -105,17 +105,17 @@ export default function TasksList() {
     setEditModalVisible(true);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editTaskName.trim()) {
       Alert.alert('Error', 'Task name is required');
       return;
     }
 
     if (selectedTask) {
-      updateTask(selectedTask.id, editTaskName, editTaskDescription, editTaskDueDate?.toISOString(), editTaskPriority);
+      await updateTask(selectedTask.id, editTaskName, editTaskDescription, editTaskDueDate?.toISOString(), editTaskPriority);
       
       if (editTaskListId !== selectedTask.listId) {
-        moveTask(selectedTask.id, editTaskListId);
+        await moveTask(selectedTask.id, editTaskListId);
       }
       
       loadTasks();
@@ -602,7 +602,7 @@ export default function TasksList() {
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
-        </Modal>
+      </Modal>
     </View>
   );
 }

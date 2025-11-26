@@ -1,10 +1,3 @@
-// import React from 'react';
-// import Board from '../components/Board';
-
-// export default function BoardScreen() {
-//   return <Board />;
-// }
-
 import React from 'react';
 import { Stack } from 'expo-router';
 import Board from '../components/Board';
