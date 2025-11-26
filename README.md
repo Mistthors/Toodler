@@ -27,6 +27,7 @@ Before running this project, make sure you have the following installed:
 3. **Install required packages**
 ```bash
    npm install @react-native-community/datetimepicker
+   npx expo install expo-image-picker
 ```
 
 4. **Start the development server**
@@ -71,6 +72,24 @@ Before running this project, make sure you have the following installed:
   - Four priority options: High, Medium, Low, None
   - Color-coded priority badges (Red, Orange, Green)
   - Optional priority selection
+ 
+- **Done Section**
+   - Automatic separation of completed tasks
+   - Shows count of completed tasks
+   - Maintains visual distinction with strikethrough
+
+- **Image Picker**
+   -  Select images directly from gallery  
+
+- **Character Limits**
+   - Board names: 50 characters
+   - Board descriptions: 200 characters
+   - Real-time character count display
+ 
+- **Color Customization**
+   - 14 pre-defined colors for lists
+   - Colors from data.json plus additional options
+   - Visual color picker with selection indicator
 
 ## 📁 Project Structure
 ```
