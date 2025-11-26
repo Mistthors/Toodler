@@ -40,6 +40,8 @@ export default function TasksList() {
   const [editTaskDueDate, setEditTaskDueDate] = useState<Date | null>(null);
   const [showEditDatePicker, setShowEditDatePicker] = useState(false);
   const [editTaskPriority, setEditTaskPriority] = useState('None');
+  const [sortMethod, setSortMethod] = useState<'none' | 'dueDateAsc' | 'dueDateDesc' | 'priorityHighFirst' | 'priorityLowFirst'>('none');
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
 
   const loadTasks = () => {
     setTasks(getTasks(Number(listId)));
@@ -188,13 +190,153 @@ export default function TasksList() {
     );
   };
 
-  const unfinishedTasks = tasks.filter(task => !task.isFinished);
-  const finishedTasks = tasks.filter(task => task.isFinished);
+  const sortTasks = (tasksToSort: Task[]) => {
+    if (sortMethod === 'none') {
+      return tasksToSort;
+    }
+
+    return [...tasksToSort].sort((a, b) => {
+      if (sortMethod === 'priorityHighFirst') {
+        const priorityOrder = { 'High': 1, 'Medium': 2, 'Low': 3, 'None': 4 };
+        const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] || 4;
+        const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] || 4;
+        
+        if (aPriority !== bPriority) {
+          return aPriority - bPriority;
+        }
+        if (!a.dueDate && !b.dueDate) return 0;
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      } 
+      
+      if (sortMethod === 'priorityLowFirst') {
+        const priorityOrder = { 'Low': 1, 'Medium': 2, 'High': 3, 'None': 4 };
+        const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] || 4;
+        const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] || 4;
+        
+        if (aPriority !== bPriority) {
+          return aPriority - bPriority;
+        }
+        if (!a.dueDate && !b.dueDate) return 0;
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      }
+      
+      if (sortMethod === 'dueDateAsc') {
+        if (!a.dueDate && !b.dueDate) return 0;
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      }
+      
+      if (sortMethod === 'dueDateDesc') {
+        if (!a.dueDate && !b.dueDate) return 0;
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime();
+      }
+
+      return 0;
+    });
+  };
+
+  const unfinishedTasks = sortTasks(tasks.filter(task => !task.isFinished));
+  const finishedTasks = sortTasks(tasks.filter(task => task.isFinished));
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>{listName}</Text>
+        
+        <View style={styles.sortContainer}>
+          <TouchableOpacity 
+            style={styles.sortDropdownButton}
+            onPress={() => setShowSortDropdown(!showSortDropdown)}
+          >
+            <Text style={styles.sortDropdownButtonText}>
+              Sort: {
+                sortMethod === 'none' ? 'None' :
+                sortMethod === 'dueDateAsc' ? 'Upcoming' :
+                sortMethod === 'dueDateDesc' ? 'Due Later' :
+                sortMethod === 'priorityHighFirst' ? 'High Priority' :
+                'Low Priority'
+              }
+            </Text>
+            <Text style={styles.dropdownArrow}>{showSortDropdown ? '▲' : '▼'}</Text>
+          </TouchableOpacity>
+
+          {showSortDropdown && (
+            <View style={styles.sortDropdownMenu}>
+              <TouchableOpacity 
+                style={[styles.sortDropdownItem, sortMethod === 'none' && styles.sortDropdownItemActive]}
+                onPress={() => {
+                  setSortMethod('none');
+                  setShowSortDropdown(false);
+                }}
+              >
+                <Text style={[styles.sortDropdownItemText, sortMethod === 'none' && styles.sortDropdownItemTextActive]}>
+                  None
+                </Text>
+                {sortMethod === 'none' && <Text style={styles.checkmark}>✓</Text>}
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.sortDropdownItem, sortMethod === 'dueDateAsc' && styles.sortDropdownItemActive]}
+                onPress={() => {
+                  setSortMethod('dueDateAsc');
+                  setShowSortDropdown(false);
+                }}
+              >
+                <Text style={[styles.sortDropdownItemText, sortMethod === 'dueDateAsc' && styles.sortDropdownItemTextActive]}>
+                  Upcoming
+                </Text>
+                {sortMethod === 'dueDateAsc' && <Text style={styles.checkmark}>✓</Text>}
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.sortDropdownItem, sortMethod === 'dueDateDesc' && styles.sortDropdownItemActive]}
+                onPress={() => {
+                  setSortMethod('dueDateDesc');
+                  setShowSortDropdown(false);
+                }}
+              >
+                <Text style={[styles.sortDropdownItemText, sortMethod === 'dueDateDesc' && styles.sortDropdownItemTextActive]}>
+                  Due Later
+                </Text>
+                {sortMethod === 'dueDateDesc' && <Text style={styles.checkmark}>✓</Text>}
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.sortDropdownItem, sortMethod === 'priorityHighFirst' && styles.sortDropdownItemActive]}
+                onPress={() => {
+                  setSortMethod('priorityHighFirst');
+                  setShowSortDropdown(false);
+                }}
+              >
+                <Text style={[styles.sortDropdownItemText, sortMethod === 'priorityHighFirst' && styles.sortDropdownItemTextActive]}>
+                  High Priority
+                </Text>
+                {sortMethod === 'priorityHighFirst' && <Text style={styles.checkmark}>✓</Text>}
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.sortDropdownItem, sortMethod === 'priorityLowFirst' && styles.sortDropdownItemActive]}
+                onPress={() => {
+                  setSortMethod('priorityLowFirst');
+                  setShowSortDropdown(false);
+                }}
+              >
+                <Text style={[styles.sortDropdownItemText, sortMethod === 'priorityLowFirst' && styles.sortDropdownItemTextActive]}>
+                  Low Priority
+                </Text>
+                {sortMethod === 'priorityLowFirst' && <Text style={styles.checkmark}>✓</Text>}
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        
         <TouchableOpacity 
           style={styles.addButton}
           onPress={() => setModalVisible(true)}
