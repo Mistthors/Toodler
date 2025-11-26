@@ -3,7 +3,6 @@ import { commonStyles } from '../styles/commonStyles';
 
 const styles = StyleSheet.create({
   ...commonStyles,
-  
   // Task-specific styles
   taskCard: {
     backgroundColor: 'white',
@@ -153,9 +152,9 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   badges: {
-  flexDirection: 'row',
-  gap: 8,
-},
+    flexDirection: 'row',
+    gap: 8,
+  },
   priorityBadge: {
     color: 'white',
     paddingHorizontal: 8,
@@ -194,6 +193,74 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   priorityButtonTextSelected: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  sortContainer: {
+    position: 'relative',
+    marginLeft: 12,
+    zIndex: 1000,
+  },
+  sortDropdownButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    minWidth: 150,
+  },
+  sortDropdownButtonText: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+    flex: 1,
+  },
+  dropdownArrow: {
+    fontSize: 10,
+    color: '#666',
+    marginLeft: 8,
+  },
+  sortDropdownMenu: {
+    position: 'absolute',
+    top: 40,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1001,
+  },
+  sortDropdownItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  sortDropdownItemActive: {
+    backgroundColor: '#E3F2FD',
+  },
+  sortDropdownItemText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  sortDropdownItemTextActive: {
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+  checkmark: {
+    fontSize: 16,
     color: '#007AFF',
     fontWeight: 'bold',
   },
