@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Alert, TouchableWithoutFeedback } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { getTasks, createTask, toggleTaskFinished, deleteTask, moveTask, getLists, updateTask } from '../../utils/dataManager';
@@ -233,102 +233,106 @@ export default function TasksList() {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={styles.modalTitle}>Create New Task</Text>
-              
-              <TextInput
-                style={styles.input}
-                placeholder="Task Name *"
-                placeholderTextColor="#999"
-                value={newTaskName}
-                onChangeText={setNewTaskName}
-              />
-              
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                placeholder="Description (optional)"
-                placeholderTextColor="#999"
-                value={newTaskDescription}
-                onChangeText={setNewTaskDescription}
-                multiline
-                numberOfLines={4}
-              />
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <Text style={styles.modalTitle}>Create New Task</Text>
+                  
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Task Name *"
+                    placeholderTextColor="#999"
+                    value={newTaskName}
+                    onChangeText={setNewTaskName}
+                  />
+                  
+                  <TextInput
+                    style={[styles.input, styles.textArea]}
+                    placeholder="Description (optional)"
+                    placeholderTextColor="#999"
+                    value={newTaskDescription}
+                    onChangeText={setNewTaskDescription}
+                    multiline
+                    numberOfLines={4}
+                  />
 
-              <Text style={styles.dateLabel}>Due Date (optional):</Text>
-              <TouchableOpacity 
-                style={styles.dateButton}
-                onPress={() => setShowNewDatePicker(true)}
-              >
-                <Text style={styles.dateButtonText}>
-                  {newTaskDueDate ? formatDate(newTaskDueDate.toISOString()) : 'Select Date'}
-                </Text>
-              </TouchableOpacity>
-
-              {showNewDatePicker && (
-                <DateTimePicker
-                  value={newTaskDueDate || new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={(event, selectedDate) => {
-                    setShowNewDatePicker(false);
-                    if (selectedDate) {
-                      setNewTaskDueDate(selectedDate);
-                    }
-                  }}
-                />
-              )}
-
-              {newTaskDueDate && (
-                <TouchableOpacity 
-                  style={styles.clearDateButton}
-                  onPress={() => setNewTaskDueDate(null)}
-                >
-                  <Text style={styles.clearDateText}>Clear Date</Text>
-                </TouchableOpacity>
-              )}
-
-              <Text style={styles.priorityLabel}>Priority:</Text>
-              <View style={styles.priorityButtons}>
-                {['High', 'Medium', 'Low', 'None'].map((priority) => (
-                  <TouchableOpacity
-                    key={priority}
-                    style={[
-                      styles.priorityButton,
-                      newTaskPriority === priority && styles.priorityButtonSelected,
-                      { borderColor: priority === 'High' ? '#FF3B30' : priority === 'Medium' ? '#FF9500' : priority === 'Low' ? '#34C759' : '#999' }
-                    ]}
-                    onPress={() => setNewTaskPriority(priority)}
+                  <Text style={styles.dateLabel}>Due Date (optional):</Text>
+                  <TouchableOpacity 
+                    style={styles.dateButton}
+                    onPress={() => setShowNewDatePicker(true)}
                   >
-                    <Text style={[
-                      styles.priorityButtonText,
-                      newTaskPriority === priority && styles.priorityButtonTextSelected
-                    ]}>
-                      {priority}
+                    <Text style={styles.dateButtonText}>
+                      {newTaskDueDate ? formatDate(newTaskDueDate.toISOString()) : 'Select Date'}
                     </Text>
                   </TouchableOpacity>
-                ))}
-              </View>
 
-              <View style={styles.modalButtons}>
-                <TouchableOpacity 
-                  style={[styles.modalButton, styles.cancelButton]}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text style={styles.cancelButtonText}>Cancel</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                  style={[styles.modalButton, styles.createButton]}
-                  onPress={handleCreateTask}
-                >
-                  <Text style={styles.createButtonText}>Create</Text>
-                </TouchableOpacity>
+                  {showNewDatePicker && (
+                    <DateTimePicker
+                      value={newTaskDueDate || new Date()}
+                      mode="date"
+                      display="default"
+                      onChange={(event, selectedDate) => {
+                        setShowNewDatePicker(false);
+                        if (selectedDate) {
+                          setNewTaskDueDate(selectedDate);
+                        }
+                      }}
+                    />
+                  )}
+
+                  {newTaskDueDate && (
+                    <TouchableOpacity 
+                      style={styles.clearDateButton}
+                      onPress={() => setNewTaskDueDate(null)}
+                    >
+                      <Text style={styles.clearDateText}>Clear Date</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  <Text style={styles.priorityLabel}>Priority:</Text>
+                  <View style={styles.priorityButtons}>
+                    {['High', 'Medium', 'Low', 'None'].map((priority) => (
+                      <TouchableOpacity
+                        key={priority}
+                        style={[
+                          styles.priorityButton,
+                          newTaskPriority === priority && styles.priorityButtonSelected,
+                          { borderColor: priority === 'High' ? '#FF3B30' : priority === 'Medium' ? '#FF9500' : priority === 'Low' ? '#34C759' : '#999' }
+                        ]}
+                        onPress={() => setNewTaskPriority(priority)}
+                      >
+                        <Text style={[
+                          styles.priorityButtonText,
+                          newTaskPriority === priority && styles.priorityButtonTextSelected
+                        ]}>
+                          {priority}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity 
+                      style={[styles.modalButton, styles.cancelButton]}
+                      onPress={() => setModalVisible(false)}
+                    >
+                      <Text style={styles.cancelButtonText}>Cancel</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity 
+                      style={[styles.modalButton, styles.createButton]}
+                      onPress={handleCreateTask}
+                    >
+                      <Text style={styles.createButtonText}>Create</Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
               </View>
-            </ScrollView>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
 
       {/* Edit Task Modal */}
@@ -338,121 +342,125 @@ export default function TasksList() {
         visible={editModalVisible}
         onRequestClose={() => setEditModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={styles.modalTitle}>Edit Task</Text>
-              
-              <TextInput
-                style={styles.input}
-                placeholder="Task Name *"
-                placeholderTextColor="#999"
-                value={editTaskName}
-                onChangeText={setEditTaskName}
-              />
-              
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                placeholder="Description (optional)"
-                placeholderTextColor="#999"
-                value={editTaskDescription}
-                onChangeText={setEditTaskDescription}
-                multiline
-                numberOfLines={4}
-              />
+        <TouchableWithoutFeedback onPress={() => setEditModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <Text style={styles.modalTitle}>Edit Task</Text>
+                  
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Task Name *"
+                    placeholderTextColor="#999"
+                    value={editTaskName}
+                    onChangeText={setEditTaskName}
+                  />
+                  
+                  <TextInput
+                    style={[styles.input, styles.textArea]}
+                    placeholder="Description (optional)"
+                    placeholderTextColor="#999"
+                    value={editTaskDescription}
+                    onChangeText={setEditTaskDescription}
+                    multiline
+                    numberOfLines={4}
+                  />
 
-              <Text style={styles.dateLabel}>Due Date (optional):</Text>
-              <TouchableOpacity 
-                style={styles.dateButton}
-                onPress={() => setShowEditDatePicker(true)}
-              >
-                <Text style={styles.dateButtonText}>
-                  {editTaskDueDate ? formatDate(editTaskDueDate.toISOString()) : 'Select Date'}
-                </Text>
-              </TouchableOpacity>
-
-              {showEditDatePicker && (
-                <DateTimePicker
-                  value={editTaskDueDate || new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={(event, selectedDate) => {
-                    setShowEditDatePicker(false);
-                    if (selectedDate) {
-                      setEditTaskDueDate(selectedDate);
-                    }
-                  }}
-                />
-              )}
-
-              {editTaskDueDate && (
-                <TouchableOpacity 
-                  style={styles.clearDateButton}
-                  onPress={() => setEditTaskDueDate(null)}
-                >
-                  <Text style={styles.clearDateText}>Clear Date</Text>
-                </TouchableOpacity>
-              )}
-
-              <Text style={styles.priorityLabel}>Priority:</Text>
-              <View style={styles.priorityButtons}>
-                {['High', 'Medium', 'Low', 'None'].map((priority) => (
-                  <TouchableOpacity
-                    key={priority}
-                    style={[
-                      styles.priorityButton,
-                      editTaskPriority === priority && styles.priorityButtonSelected,
-                      { borderColor: priority === 'High' ? '#FF3B30' : priority === 'Medium' ? '#FF9500' : priority === 'Low' ? '#34C759' : '#999' }
-                    ]}
-                    onPress={() => setEditTaskPriority(priority)}
+                  <Text style={styles.dateLabel}>Due Date (optional):</Text>
+                  <TouchableOpacity 
+                    style={styles.dateButton}
+                    onPress={() => setShowEditDatePicker(true)}
                   >
-                    <Text style={[
-                      styles.priorityButtonText,
-                      editTaskPriority === priority && styles.priorityButtonTextSelected
-                    ]}>
-                      {priority}
+                    <Text style={styles.dateButtonText}>
+                      {editTaskDueDate ? formatDate(editTaskDueDate.toISOString()) : 'Select Date'}
                     </Text>
                   </TouchableOpacity>
-                ))}
-              </View>
 
-              <Text style={styles.listLabel}>Move to List:</Text>
-              {availableLists.map((list) => (
-                <TouchableOpacity
-                  key={list.id}
-                  style={[
-                    styles.listOption, 
-                    { borderLeftColor: list.color, borderLeftWidth: 5 },
-                    editTaskListId === list.id && styles.selectedListOption
-                  ]}
-                  onPress={() => setEditTaskListId(list.id)}
-                >
-                  <Text style={styles.listOptionText}>{list.name}</Text>
-                  {editTaskListId === list.id && (
-                    <Text style={styles.selectedCheckmark}>✓</Text>
+                  {showEditDatePicker && (
+                    <DateTimePicker
+                      value={editTaskDueDate || new Date()}
+                      mode="date"
+                      display="default"
+                      onChange={(event, selectedDate) => {
+                        setShowEditDatePicker(false);
+                        if (selectedDate) {
+                          setEditTaskDueDate(selectedDate);
+                        }
+                      }}
+                    />
                   )}
-                </TouchableOpacity>
-              ))}
 
-              <View style={styles.modalButtons}>
-                <TouchableOpacity 
-                  style={[styles.modalButton, styles.cancelButton]}
-                  onPress={() => setEditModalVisible(false)}
-                >
-                  <Text style={styles.cancelButtonText}>Cancel</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                  style={[styles.modalButton, styles.createButton]}
-                  onPress={handleSaveEdit}
-                >
-                  <Text style={styles.createButtonText}>Save</Text>
-                </TouchableOpacity>
+                  {editTaskDueDate && (
+                    <TouchableOpacity 
+                      style={styles.clearDateButton}
+                      onPress={() => setEditTaskDueDate(null)}
+                    >
+                      <Text style={styles.clearDateText}>Clear Date</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  <Text style={styles.priorityLabel}>Priority:</Text>
+                  <View style={styles.priorityButtons}>
+                    {['High', 'Medium', 'Low', 'None'].map((priority) => (
+                      <TouchableOpacity
+                        key={priority}
+                        style={[
+                          styles.priorityButton,
+                          editTaskPriority === priority && styles.priorityButtonSelected,
+                          { borderColor: priority === 'High' ? '#FF3B30' : priority === 'Medium' ? '#FF9500' : priority === 'Low' ? '#34C759' : '#999' }
+                        ]}
+                        onPress={() => setEditTaskPriority(priority)}
+                      >
+                        <Text style={[
+                          styles.priorityButtonText,
+                          editTaskPriority === priority && styles.priorityButtonTextSelected
+                        ]}>
+                          {priority}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+
+                  <Text style={styles.listLabel}>Move to List:</Text>
+                  {availableLists.map((list) => (
+                    <TouchableOpacity
+                      key={list.id}
+                      style={[
+                        styles.listOption, 
+                        { borderLeftColor: list.color, borderLeftWidth: 5 },
+                        editTaskListId === list.id && styles.selectedListOption
+                      ]}
+                      onPress={() => setEditTaskListId(list.id)}
+                    >
+                      <Text style={styles.listOptionText}>{list.name}</Text>
+                      {editTaskListId === list.id && (
+                        <Text style={styles.selectedCheckmark}>✓</Text>
+                      )}
+                    </TouchableOpacity>
+                  ))}
+
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity 
+                      style={[styles.modalButton, styles.cancelButton]}
+                      onPress={() => setEditModalVisible(false)}
+                    >
+                      <Text style={styles.cancelButtonText}>Cancel</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity 
+                      style={[styles.modalButton, styles.createButton]}
+                      onPress={handleSaveEdit}
+                    >
+                      <Text style={styles.createButtonText}>Save</Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
               </View>
-            </ScrollView>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
-      </Modal>
+        </TouchableWithoutFeedback>
+        </Modal>
     </View>
   );
 }

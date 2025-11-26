@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, TextInput, TouchableOpacity, View, Modal, Alert } from 'react-native';
+import { FlatList, Image, Text, TextInput, TouchableOpacity, View, Modal, Alert, TouchableWithoutFeedback } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getBoards, createBoard, deleteBoard, updateBoard } from '../../utils/dataManager';
 import styles from './style';
@@ -144,56 +144,60 @@ export default function BoardsList() {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Create New Board</Text>
-            
-            <TextInput
-              style={styles.input}
-              placeholder="Board Name *"
-              placeholderTextColor="#999"
-              value={newBoardName}
-              onChangeText={setNewBoardName}
-              maxLength={50}
-            />
-            <Text style={styles.characterCount}>{newBoardName.length}/50</Text>
-            
-            <TextInput
-              style={styles.input}
-              placeholder="Description (optional)"
-              placeholderTextColor="#999"
-              value={newBoardDescription}
-              onChangeText={setNewBoardDescription}
-              multiline
-              maxLength={200}
-            />
-            <Text style={styles.characterCount}>{newBoardDescription.length}/200</Text>
-            
-            <TextInput
-              style={styles.input}
-              placeholder="Image URL (optional)"
-              placeholderTextColor="#999"
-              value={newBoardPhoto}
-              onChangeText={setNewBoardPhoto}
-            />
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Create New Board</Text>
+                
+                <TextInput
+                  style={styles.input}
+                  placeholder="Board Name *"
+                  placeholderTextColor="#999"
+                  value={newBoardName}
+                  onChangeText={setNewBoardName}
+                  maxLength={50}
+                />
+                <Text style={styles.characterCount}>{newBoardName.length}/50</Text>
+                
+                <TextInput
+                  style={styles.input}
+                  placeholder="Description (optional)"
+                  placeholderTextColor="#999"
+                  value={newBoardDescription}
+                  onChangeText={setNewBoardDescription}
+                  multiline
+                  maxLength={200}
+                />
+                <Text style={styles.characterCount}>{newBoardDescription.length}/200</Text>
+                
+                <TextInput
+                  style={styles.input}
+                  placeholder="Image URL (optional)"
+                  placeholderTextColor="#999"
+                  value={newBoardPhoto}
+                  onChangeText={setNewBoardPhoto}
+                />
 
-            <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.createButton]}
-                onPress={handleCreateBoard}
-              >
-                <Text style={styles.createButtonText}>Create</Text>
-              </TouchableOpacity>
-            </View>
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity 
+                    style={[styles.modalButton, styles.cancelButton]}
+                    onPress={() => setModalVisible(false)}
+                  >
+                    <Text style={styles.cancelButtonText}>Cancel</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity 
+                    style={[styles.modalButton, styles.createButton]}
+                    onPress={handleCreateBoard}
+                  >
+                    <Text style={styles.createButtonText}>Create</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
 
       {/* Edit Board Modal */}
@@ -203,11 +207,13 @@ export default function BoardsList() {
         visible={editModalVisible}
         onRequestClose={() => setEditModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit Board</Text>
-            
-            <TextInput
+        <TouchableWithoutFeedback onPress={() => setEditModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Edit Board</Text>
+                
+                <TextInput
               style={styles.input}
               placeholder="Board Name *"
               placeholderTextColor="#999"
@@ -252,7 +258,9 @@ export default function BoardsList() {
               </TouchableOpacity>
             </View>
           </View>
+          </TouchableWithoutFeedback>
         </View>
+      </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
