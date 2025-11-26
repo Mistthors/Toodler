@@ -2,49 +2,72 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Get started
+## 🔧 Prerequisites
 
-1. Install dependencies
+Before running this project, make sure you have the following installed:
 
-   ```bash
-   npm install
-   ```
+- Node.js (v14 or higher)
+- npm
+- Expo CLI (`npm install -g expo-cli`)
+- Expo Go app on your mobile device (for testing)
 
-2. Start the app
+## 📦 Installation
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+1. **Clone the repository**
 ```bash
-npm run reset-project
+   git clone https://github.com/Mistthors/Toodler.git
+   cd toodler-app
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. **Install dependencies**
+```bash
+   npm install
+```
 
-## Learn more
+3. **Install required packages**
+```bash
+   npm install @react-native-community/datetimepicker
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+4. **Start the development server**
+```bash
+   npx expo start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+5. **Run on your device**
+   - Scan the QR code with Expo Go (Android) or Camera app (iOS)
+   - Or press `a` for Android emulator, `i` for iOS simulator
 
-## Join the community
 
-Join our community of developers creating universal apps.
+## ✨ Features
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Core Functionality
+- **Board Management**
+  - Create, read, update, and delete boards
+  - Add custom thumbnails and descriptions
+  - Character limits (50 chars for names, 200 for descriptions)
+
+- **List Management**
+  - Create and manage lists within boards
+  - Customizable color coding (14 color options)
+  - Edit list names and colors
+  - Delete lists with cascade deletion of tasks
+
+- **Task Management**
+  - Create tasks with names and descriptions
+  - Mark tasks as done/undone
+  - Edit task details
+  - Delete tasks
+  - Move tasks between lists
+  - Automatic "Done" section for completed tasks
+
+### Extra Features
+- **Due Dates**
+  - Optional due date selection with date picker
+  - Visual indicators for overdue tasks (red text)
+  - Clear date functionality
+
+- **Priority Levels**
+  - Four priority options: High, Medium, Low, None
+  - Color-coded priority badges (Red, Orange, Green)
+  - Optional priority selection
