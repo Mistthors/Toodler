@@ -62,7 +62,26 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingContainer: {
   flex: 1,
-},
+  },
+  imagePickerButton: {
+  backgroundColor: '#EDEDED',
+  paddingVertical: 12,
+  borderRadius: 12,
+  alignItems: 'center',
+  marginTop: 8,
+  },
+
+  imagePickerText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  previewImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 12,
+    marginTop: 10,
+  },
 });
 
 

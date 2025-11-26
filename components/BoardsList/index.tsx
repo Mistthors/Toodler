@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, TextInput, TouchableOpacity, View, Modal, Alert, TouchableWithoutFeedback, KeyboardAvoidingView,Platform,ScrollView } from 'react-native';
+import { FlatList, Image, Text, TextInput, TouchableOpacity, View, Modal, Alert, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getBoards, createBoard, deleteBoard, updateBoard } from '../../utils/dataManager';
 import styles from './style';
+import * as ImagePicker from 'expo-image-picker';
 
 interface Board {
   id: number;
@@ -94,6 +95,29 @@ export default function BoardsList() {
     }, 10);
   }
  };
+ const pickImage = async (mode: 'create' | 'edit') => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert('Permission needed', 'Permission to access photos is required.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      if (mode === 'create') {
+        setNewBoardPhoto(uri);
+      } else {
+        setEditBoardPhoto(uri);
+      }
+    }
+  };
 
   const renderBoard = ({ item }: { item: Board }) => (
     <View style={styles.boardCard}>
@@ -138,7 +162,6 @@ export default function BoardsList() {
       />
 
       {/* Create Board Modal */}
-
       <Modal
         animationType="slide"
         transparent={true}
@@ -182,14 +205,23 @@ export default function BoardsList() {
                     />
                     <Text style={styles.characterCount}>{newBoardDescription.length}/200</Text>
                     
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Image URL (optional)"
-                      placeholderTextColor="#999"
-                      value={newBoardPhoto}
-                      onChangeText={setNewBoardPhoto}
-                    />
+                    <TouchableOpacity
+                      style={styles.imagePickerButton}
+                      onPress={() => pickImage('create')}
+                    >
+                      <Text style={styles.imagePickerText}>
+                        {newBoardPhoto
+                          ? 'Change Board Image'
+                          : 'Pick Board Image from Gallery'}
+                      </Text>
+                    </TouchableOpacity>
 
+                    {newBoardPhoto !== '' && (
+                      <Image
+                        source={{ uri: newBoardPhoto }}
+                        style={styles.previewImage}
+                      />
+                    )}
                     <View style={styles.modalButtons}>
                       <TouchableOpacity 
                         style={[styles.modalButton, styles.cancelButton]}
@@ -226,10 +258,8 @@ export default function BoardsList() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
         >
-          {/* tap OUTSIDE card => close */}
           <TouchableWithoutFeedback onPress={() => setEditModalVisible(false)}>
             <View style={styles.modalOverlay}>
-              {/* tap INSIDE card => keep open */}
               <TouchableWithoutFeedback onPress={() => {}}>
                 <View style={styles.modalContent}>
                   <ScrollView
@@ -260,13 +290,23 @@ export default function BoardsList() {
                     />
                     <Text style={styles.characterCount}>{editBoardDescription.length}/200</Text>
                     
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Image URL (optional)"
-                      placeholderTextColor="#999"
-                      value={editBoardPhoto}
-                      onChangeText={setEditBoardPhoto}
-                    />
+                    <TouchableOpacity
+                      style={styles.imagePickerButton}
+                      onPress={() => pickImage('edit')}
+                    >
+                      <Text style={styles.imagePickerText}>
+                        {editBoardPhoto
+                          ? 'Change Board Image'
+                          : 'Pick Board Image from Gallery'}
+                      </Text>
+                    </TouchableOpacity>
+
+                    {editBoardPhoto !== '' && (
+                      <Image
+                        source={{ uri: editBoardPhoto }}
+                        style={styles.previewImage}
+                      />
+                    )}
 
                     <View style={styles.modalButtons}>
                       <TouchableOpacity 

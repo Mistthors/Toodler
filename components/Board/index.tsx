@@ -244,10 +244,8 @@ export default function Board() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
         >
-          {/* tap OUTSIDE => close */}
           <TouchableWithoutFeedback onPress={() => setEditModalVisible(false)}>
             <View style={styles.modalOverlay}>
-              {/* tap INSIDE => keep open */}
               <TouchableWithoutFeedback onPress={() => {}}>
                 <View style={styles.modalContent}>
                   <ScrollView
