@@ -71,3 +71,28 @@ Before running this project, make sure you have the following installed:
   - Four priority options: High, Medium, Low, None
   - Color-coded priority badges (Red, Orange, Green)
   - Optional priority selection
+
+## 📁 Project Structure
+```
+toodler-app/
+├── app/
+│   ├── index.tsx              # Home screen with boards list                        
+│   ├── board.tsx              # Board detail screen (lists)
+│   └── tasks.tsx              # Tasks screen
+├── assets/
+│   └── data.json              # Initial app data
+├── components/
+│   ├── BoardsList/
+│   │   ├── index.tsx          # Boards list component
+│   │   └── style.js           # Boards list styles
+│   ├── Board/
+│   │   ├── index.tsx          # Board/lists component
+│   │   └── style.js           # Board styles
+│   └── TasksList/
+│       ├── index.tsx          # Tasks list component
+│       └── style.js           # Tasks styles
+├── styles/
+│   └── commonStyles.js        # Shared styles across components
+├── utils/
+│   └── dataManager.js         # Data management functions
+└── RE
