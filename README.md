@@ -63,15 +63,35 @@ Before running this project, make sure you have the following installed:
   - Automatic "Done" section for completed tasks
 
 ### Extra Features
+- **Persistent Storage (AsyncStorage)**
+- All data automatically saved to device storage
+- Data survives app restarts and closes
+- Automatic save on every create, update, and delete operation
+- Initial data loaded from `data.json` on first launch
+- All subsequent data changes stored persistently
+- Uses React Native AsyncStorage for local data persistence
+  
 - **Due Dates**
-  - Optional due date selection with date picker
-  - Visual indicators for overdue tasks (red text)
-  - Clear date functionality
+  - Optional due date selection with native date picker
+   - Visual indicators for overdue tasks (red text, bold font)
+   - Clear date functionality to remove due dates
+   - Tasks without due dates remain at the bottom when sorting
 
 - **Priority Levels**
   - Four priority options: High, Medium, Low, None
   - Color-coded priority badges (Red, Orange, Green)
   - Optional priority selection
+ 
+- **Task Sorting**
+   - Multiple sorting options via dropdown menu:
+     - **None**: Default order (creation order)
+     - **Upcoming**: Sort by due date (earliest first)
+     - **Due Later**: Sort by due date (latest first)
+     - **High Priority**: Sort by priority (High → Medium → Low → None)
+     - **Low Priority**: Sort by priority (Low → Medium → High → None)
+   - Sorting applies to both active and completed tasks
+   - Visual dropdown with checkmark for selected option
+   - Persistent sort selection during session
  
 - **Done Section**
    - Automatic separation of completed tasks
@@ -79,7 +99,11 @@ Before running this project, make sure you have the following installed:
    - Maintains visual distinction with strikethrough
 
 - **Image Picker**
-   -  Select images directly from gallery  
+   - Access device camera roll for board thumbnails
+   - Select images directly from photo gallery
+   - Proper permission handling for camera and gallery access
+   - Image preview in create/edit modals
+   - Supports custom board images for better visual organization
 
 - **Character Limits**
    - Board names: 50 characters
@@ -90,6 +114,24 @@ Before running this project, make sure you have the following installed:
    - 14 pre-defined colors for lists
    - Colors from data.json plus additional options
    - Visual color picker with selection indicator
+ 
+## 💾 Data Management
+
+The app uses **AsyncStorage** for persistent data storage. Your data is saved automatically and survives app restarts.
+
+**Data Storage:**
+- All boards, lists, and tasks are saved locally on your device
+- Data persists between app sessions
+- Automatic save on every create/update/delete operation
+
+**Storage Location:**
+- Data is stored using React Native AsyncStorage
+- Key: `@toodler_data`
+- Format: JSON
+
+**Initial Data:**
+- On first launch, the app loads sample data from `assets/data.json`
+- After that, it uses your saved data
 
 ## 📁 Project Structure
 ```
