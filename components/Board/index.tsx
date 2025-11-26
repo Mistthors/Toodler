@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Alert, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Alert, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { getLists, createList, deleteList, deleteBoard, getTasks, updateList } from '../../utils/dataManager';
 import styles from './style';
@@ -167,55 +167,70 @@ export default function Board() {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={styles.modalOverlay}>
-            <TouchableWithoutFeedback>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Create New List</Text>
-                
-                <TextInput
-                  style={styles.input}
-                  placeholder="List Name *"
-                  placeholderTextColor="#999"
-                  value={newListName}
-                  onChangeText={setNewListName}
-                />
-                
-                <Text style={styles.colorLabel}>Choose Color:</Text>
-                <View style={styles.colorPicker}>
-                  {colors.map((color) => (
-                    <TouchableOpacity
-                      key={color}
-                      style={[
-                        styles.colorOption,
-                        { backgroundColor: color },
-                        newListColor === color && styles.selectedColor
-                      ]}
-                      onPress={() => setNewListColor(color)}
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingContainer}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
+        >
+          {/* tap OUTSIDE => close */}
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+            <View style={styles.modalOverlay}>
+              {/* tap INSIDE => keep open */}
+              <TouchableWithoutFeedback onPress={() => {}}>
+                <View style={styles.modalContent}>
+                  <ScrollView
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 24 }}
+                  >
+                    <Text style={styles.modalTitle}>Create New List</Text>
+                    
+                    <TextInput
+                      style={styles.input}
+                      placeholder="List Name *"
+                      placeholderTextColor="#999"
+                      value={newListName}
+                      onChangeText={setNewListName}
                     />
-                  ))}
-                </View>
+                    
+                    <Text style={styles.colorLabel}>Choose Color:</Text>
+                    <View style={styles.colorPicker}>
+                      {colors.map((color) => (
+                        <TouchableOpacity
+                          key={color}
+                          style={[
+                            styles.colorOption,
+                            { backgroundColor: color },
+                            newListColor === color && styles.selectedColor
+                          ]}
+                          onPress={() => setNewListColor(color)}
+                        />
+                      ))}
+                    </View>
 
-                <View style={styles.modalButtons}>
-                  <TouchableOpacity 
-                    style={[styles.modalButton, styles.cancelButton]}
-                    onPress={() => setModalVisible(false)}
-                  >
-                    <Text style={styles.cancelButtonText}>Cancel</Text>
-                  </TouchableOpacity>
-                  
-                  <TouchableOpacity 
-                    style={[styles.modalButton, styles.createButton]}
-                    onPress={handleCreateList}
-                  >
-                    <Text style={styles.createButtonText}>Create</Text>
-                  </TouchableOpacity>
+                    <View style={styles.modalButtons}>
+                      <TouchableOpacity 
+                        style={[styles.modalButton, styles.cancelButton]}
+                        onPress={() => setModalVisible(false)}
+                      >
+                        <Text style={styles.cancelButtonText}>Cancel</Text>
+                      </TouchableOpacity>
+                      
+                      <TouchableOpacity 
+                        style={[styles.modalButton, styles.createButton]}
+                        onPress={handleCreateList}
+                      >
+                        <Text style={styles.createButtonText}>Create</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </ScrollView>
                 </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
+
 
       {/* Edit List Modal */}
       <Modal
@@ -224,50 +239,68 @@ export default function Board() {
         visible={editModalVisible}
         onRequestClose={() => setEditModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit List</Text>
-            
-            <TextInput
-              style={styles.input}
-              placeholder="List Name *"
-              placeholderTextColor="#999"
-              value={editListName}
-              onChangeText={setEditListName}
-            />
-            
-            <Text style={styles.colorLabel}>Choose Color:</Text>
-            <View style={styles.colorPicker}>
-              {colors.map((color) => (
-                <TouchableOpacity
-                  key={color}
-                  style={[
-                    styles.colorOption,
-                    { backgroundColor: color },
-                    editListColor === color && styles.selectedColor
-                  ]}
-                  onPress={() => setEditListColor(color)}
-                />
-              ))}
-            </View>
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingContainer}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
+        >
+          {/* tap OUTSIDE => close */}
+          <TouchableWithoutFeedback onPress={() => setEditModalVisible(false)}>
+            <View style={styles.modalOverlay}>
+              {/* tap INSIDE => keep open */}
+              <TouchableWithoutFeedback onPress={() => {}}>
+                <View style={styles.modalContent}>
+                  <ScrollView
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 24 }}
+                  >
+                    <Text style={styles.modalTitle}>Edit List</Text>
+                    
+                    <TextInput
+                      style={styles.input}
+                      placeholder="List Name *"
+                      placeholderTextColor="#999"
+                      value={editListName}
+                      onChangeText={setEditListName}
+                    />
+                    
+                    <Text style={styles.colorLabel}>Choose Color:</Text>
+                    <View style={styles.colorPicker}>
+                      {colors.map((color) => (
+                        <TouchableOpacity
+                          key={color}
+                          style={[
+                            styles.colorOption,
+                            { backgroundColor: color },
+                            editListColor === color && styles.selectedColor
+                          ]}
+                          onPress={() => setEditListColor(color)}
+                        />
+                      ))}
+                    </View>
 
-            <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setEditModalVisible(false)}
-              >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.createButton]}
-                onPress={handleSaveEdit}
-              >
-                <Text style={styles.createButtonText}>Save</Text>
-              </TouchableOpacity>
+                    <View style={styles.modalButtons}>
+                      <TouchableOpacity 
+                        style={[styles.modalButton, styles.cancelButton]}
+                        onPress={() => setEditModalVisible(false)}
+                      >
+                        <Text style={styles.cancelButtonText}>Cancel</Text>
+                      </TouchableOpacity>
+                      
+                      <TouchableOpacity 
+                        style={[styles.modalButton, styles.createButton]}
+                        onPress={handleSaveEdit}
+                      >
+                        <Text style={styles.createButtonText}>Save</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </ScrollView>
+                </View>
+              </TouchableWithoutFeedback>
             </View>
-          </View>
-        </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

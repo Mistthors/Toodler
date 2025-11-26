@@ -78,6 +78,9 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderWidth: 3,
   },
+  keyboardAvoidingContainer: {
+  flex: 1,
+},
 });
 
 export default styles;

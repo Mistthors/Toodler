@@ -60,6 +60,10 @@ const styles = StyleSheet.create({
     marginTop: -8,
     marginBottom: 8,
   },
+  keyboardAvoidingContainer: {
+  flex: 1,
+},
 });
+
 
 export default styles;
