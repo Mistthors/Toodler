@@ -258,10 +258,10 @@ export default function TasksList() {
             <Text style={styles.sortDropdownButtonText}>
               Sort: {
                 sortMethod === 'none' ? 'None' :
-                sortMethod === 'dueDateAsc' ? 'Due Soon' :
+                sortMethod === 'dueDateAsc' ? 'Upcoming' :
                 sortMethod === 'dueDateDesc' ? 'Due Later' :
-                sortMethod === 'priorityHighFirst' ? 'High First' :
-                'Low First'
+                sortMethod === 'priorityHighFirst' ? 'High Priority' :
+                'Low Priority'
               }
             </Text>
             <Text style={styles.dropdownArrow}>{showSortDropdown ? '▲' : '▼'}</Text>
@@ -290,7 +290,7 @@ export default function TasksList() {
                 }}
               >
                 <Text style={[styles.sortDropdownItemText, sortMethod === 'dueDateAsc' && styles.sortDropdownItemTextActive]}>
-                  Due Soon
+                  Upcoming
                 </Text>
                 {sortMethod === 'dueDateAsc' && <Text style={styles.checkmark}>✓</Text>}
               </TouchableOpacity>
@@ -316,7 +316,7 @@ export default function TasksList() {
                 }}
               >
                 <Text style={[styles.sortDropdownItemText, sortMethod === 'priorityHighFirst' && styles.sortDropdownItemTextActive]}>
-                  High First
+                  High Priority
                 </Text>
                 {sortMethod === 'priorityHighFirst' && <Text style={styles.checkmark}>✓</Text>}
               </TouchableOpacity>
@@ -329,7 +329,7 @@ export default function TasksList() {
                 }}
               >
                 <Text style={[styles.sortDropdownItemText, sortMethod === 'priorityLowFirst' && styles.sortDropdownItemTextActive]}>
-                  Low First
+                  Low Priority
                 </Text>
                 {sortMethod === 'priorityLowFirst' && <Text style={styles.checkmark}>✓</Text>}
               </TouchableOpacity>
